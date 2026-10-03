@@ -9,7 +9,7 @@ st.set_page_config(page_title="Salary Predictor", page_icon="💰", layout="cent
 # Load the trained model
 @st.cache_resource
 def load_model():
-    return joblib.load("model/model.pkl")
+    return joblib.load("model.pkl")
 
 model = load_model()
 
@@ -32,14 +32,14 @@ with st.sidebar:
     )
     st.subheader("Model Performance")
     try:
-        with open("model/metrics.txt") as f:
+        with open("metrics.txt") as f:
             st.text(f.read())
     except FileNotFoundError:
         st.write("Metrics not available.")
 
     st.subheader("Dataset Preview")
     try:
-        df = pd.read_csv("data/salary_data.csv")
+        df = pd.read_csv("salary_data.csv")
         st.dataframe(df.head())
     except FileNotFoundError:
         st.write("Dataset not found.")
@@ -62,7 +62,7 @@ if "history" not in st.session_state:
 if st.button("Predict Salary", type="primary"):
     input_df = pd.DataFrame({"YearsExperience": [years_experience]})
     prediction = model.predict(input_df)[0]
-    prediction = max(prediction, 0)  # salaries shouldn't be negative
+    prediction = max(prediction, 0)
 
     st.success(f"### Predicted Salary: ${prediction:,.2f}")
 
